@@ -1,0 +1,21 @@
+{% load FormatFilter %}
+<ul>
+    {% for i in Title %}
+        {% if  i.NavName == "首页" %}
+            <li>
+                <h4 class="myactive">
+                    <a style="color: #4183C4;text-decoration: none;" href="{% url 'Comprehensive:GetNavName'  i.slug|ForamatString %}">{{ i.NavName }}</a>
+                </h4>
+            </li>
+        {% else %}
+            <li>
+                <h4>
+                    <a style="color: #4183C4;text-decoration: none;" target="_blank"
+                       href="{% url 'Comprehensive:GetNavName'  i.slug|ForamatString %}">{{ i.NavName }}</a>
+                </h4>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+

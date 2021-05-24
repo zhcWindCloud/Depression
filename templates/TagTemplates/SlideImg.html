@@ -1,0 +1,15 @@
+
+
+{% for slide in SlideImg %}
+    <li>
+        <a target="_blank" href="#">
+            <img src="{{ slide.image.url }}" alt="{{ slide.create_time }}"/>
+        </a>
+    </li>
+{% empty %}
+    <li class="active" style="width: 1050px; height: 354px;"><img
+            src="{% static 'img/banner_10001_3f4dac09bb.jpg' %}" alt="抑郁症网站"></li>
+    <li class="" style="width: 1050px; height: 354px;"><img
+            src="{% static 'img/banner_10001_300a22a90b.jpg' %}" alt="个人网站"></li>
+{% endfor %}
+

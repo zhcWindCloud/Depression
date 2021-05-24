@@ -1,0 +1,96 @@
+{% extends 'Comm/header.html' %}
+{% load StaticLister %}
+{% load FormatFilter %}
+
+
+{% block content %}
+    <style>
+        {#    p {#}
+        {#        border-bottom: 1px dotted black;#}
+        {#        font-size: 20px;#}
+        {#        font-family: "华文仿宋";#}
+        {#        font-style: normal;#}
+        {#        font-weight: bold;#}
+        {#        text-indent: 2em;#}
+        {#        display: inline;#}
+        {#        padding-bottom: 4px;#}
+        {#        line-height: 40px;#}
+        {##}
+        {#    }#}
+        {#    p:before {#}
+        {#      width: 493px;#}
+        {#      height: 1px;#}
+        {#      display: inline-block;#}
+        {#      position: absolute;#}
+        {#      bottom: -1px;#}
+        {#      content: "";#}
+        {#      background: #f4efe8;#}
+        {#      border-bottom: none;#}
+        {#    }#}
+        {#p:after {#}
+        {#      position: absolute;#}
+        {#      content: "";#}
+        {#      width: 493px;#}
+        {#      bottom: 0;#}
+        {#      left: 0;#}
+        {#      height: 1px;#}
+        {#      display: inline-block;#}
+        {#      border-bottom: 1px dashed #b5b8b8;#}
+        {#    }#}
+        p {
+            width: 100%;
+            height: auto;
+            font-size: 20px;
+            font-family: "华文仿宋";
+            font-style: normal;
+            font-weight: bold;
+            background: url(/static/img/underline.png);
+            background-size: 100%;
+            line-height: 36px;
+            margin-top: 0;
+            bottom: 0;
+        }
+
+
+    </style>
+
+    <div class="ui breadcrumb" style="margin-top: 20px">
+        <a class="section">主页</a>
+        <i class="right angle icon divider"></i>
+        {% if Article and Article.NavMeun %}
+            <a class="section ">{{ Article.NavMeun.NavName }}</a>
+            <i class="right angle icon divider"></i>
+        {% endif %}
+        <div class="section active">文章详情</div>
+    </div>
+
+    <hr>
+
+    <div class="ui grid container" style="margin-top: 20px">
+        <div class="eleven wide column">
+            <div class="ui piled segments">
+                <div class="ui padded segment">
+                    <div style="margin-top: 20px;margin-bottom: 20px">
+                        <div style="text-align: center;"><h2>{{ Article.title }}</h2></div>
+                        <div style="text-align: center;margin-top: 20px;margin-bottom: 20px">
+                            <span><i class="stopwatch icon"></i>{{ Article.create_time|FormatDate }}</span>
+                            &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp;<span><i
+                                class="user icon"></i>作者:&nbsp; &nbsp;{{ Article.author|FormatAuthor }}</span>
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            <span><i class="eye icon"></i>浏览:&nbsp; &nbsp;{{ Article.reading }}</span>
+                        </div>
+                        <br>
+                        <div style='font-size: 20px; font-family: "华文仿宋";font-style: normal;font-weight: bold;'>{{ Article.content_render|AddStrHtml|safe }}</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="one wide column"></div>
+        <div class="four wide column">
+            <div class="ui">
+                {% GetArticle_Catroy %}
+            </div>
+        </div>
+{% endblock %}

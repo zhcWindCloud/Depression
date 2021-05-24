@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <script src="{% static 'js/lib/func.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/echarts.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/jquery-2.1.1.js' %}" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+<div style="margin-top: 60px;margin-left: 60px">
+    <div id="main" style="width: 1000px;height:400px;"></div>
+</div>
+<script src="{% static 'js/echarts_style/walden.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    var myChart = echarts.init(document.getElementById('main'), "walden");
+    option = {
+        title: {
+            text: '问卷折线图详情'
+        },
+        tooltip: {
+            trigger: 'axis',
+        },
+        legend: {
+            data: []
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        }, dataZoom:
+            [
+                {
+                    type: 'inside',
+                    realtime: true,
+                    show: true,
+                    start: 0,
+                    end: 50
+                },
+
+            ],
+
+        series: []
+    };
+    $.ajax({
+        url: "{% url 'Article:LineCharts' %}",
+        type: "post",
+        data: {},
+        contentType: "text/html; charset=utf-8",
+        dataType: 'json',
+        success: function (res) {
+            option.legend.data = res.retObj[1]
+            option.xAxis.data = GetDictKey(res.retObj)
+            option.series = GetChartLineData(res.retObj)
+            console.log(GetChartLineData(res.retObj))
+            myChart.setOption(option)
+        }, error: function () {
+            console.log("异常")
+        }
+    })
+
+</script>
+</body>
+</html>

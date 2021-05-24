@@ -1,0 +1,250 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list simpletags %}
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}?_=20180905"/>
+
+    {% if cl.formset %}
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
+    {% endif %}
+
+    {% if cl.formset or action_form %}
+        <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    {% endif %}
+    {{ media.css }}
+    {% if not actions_on_top and not actions_on_bottom %}
+        <style>
+            #changelist table thead th:first-child {
+                width: inherit
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media.js }}
+
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <div class="breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+            &rsaquo; <a
+                href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+            &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+{% block content_title %}
+
+{% endblock %}
+{% block content %}
+    {% block object-tools %}
+        <ul class="object-tools">
+            {% block object-tools-items %}
+                {% if has_add_permission %}
+                    {{ block.super }}
+                {% endif %}
+            {% endblock %}
+        </ul>
+    {% endblock %}
+
+    <div id="content-main">
+
+        {% if cl.formset.errors %}
+            <p class="errornote">
+                {% if cl.formset.total_error_count == 1 %}{% trans "Please correct the error below." %}{% else %}
+                    {% trans "Please correct the errors below." %}{% endif %}
+            </p>
+            {{ cl.formset.non_form_errors }}
+        {% endif %}
+        <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+            {% block search %}{% search_form cl %}{% endblock %}
+            {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+
+            <form id="changelist-form" method="post" {% if cl.formset.is_multipart %}
+                  enctype="multipart/form-data" {% endif %} novalidate>{% csrf_token %}
+                {% if cl.formset %}
+                    <div>{{ cl.formset.management_form }}</div>
+                {% endif %}
+
+                {% block result_list %}
+                    <script src="{% static 'js/echarts_style/infographic.js' %}"></script>
+
+                    <script src="{% static 'js/echarts.min.js' %}"></script>
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div style="display:inline-block;padding-top: 30px;padding-bottom：0px;margin-left:60px">
+                        <select class="el-select-dropdown el-select-dropdown__item" name="mySelect"
+                                id="mySelect"></select>
+                    </div>
+                    <div id="app" style="margin: 30px">
+                        <div id="pie"
+                             style="display:inline-block;width: 400px;height:400px;background-color: white;padding: 30px;margin-left:30px"></div>
+                        <div id="columnar"
+                             style="display:inline-block; width: 400px;height:400px;background-color: white;margin-left:20px;padding: 30px"></div>
+                    </div>
+
+                    <script>
+                        $.get("{% url 'Question_Bank:GetAllType' %}", function (res) {
+                            for (var i = 0; i < res.retObj.length; i++) {
+                                var val = res.retObj[i]
+                                $("#mySelect").append("<option value='" + val + "'>" + val + "</option>");
+                            }
+                        })
+                    </script>
+                    <script type="text/javascript">
+                      var colors = [ '#1be39d','#6415e2', '#00ff00', '#ba118f', '#9FE6B8', '#FFDB5C','#1bc7e3', '#8013cd',];
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChartPie = echarts.init(document.getElementById('pie'), "infographic");
+
+
+                        var myPieoption = {
+                              color: colors,
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: "{a} <br/>{b}: {c} ({d}%)"//模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比。
+                            },
+                            {#color:['#DCDCDC','#FFFAF0','#FFEBCD','#FE8463', 'red', 'green'],#}
+                            legend: {
+                                //图例垂直排列
+                                orient: 'vertical',
+                                x: 'right',
+                                //data中的名字要与series-data中的列名对应，方可点击操控
+                                //data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                            },
+
+
+                        };
+                        myChartPie.setOption(myPieoption)
+
+
+                        $(document).ready(function () {
+                            var mytitle = $("#mySelect").val()
+                            if (mytitle == "") {
+                                mypie('抑郁自评量表(SDS)')
+                                mynar('抑郁自评量表(SDS)')
+                            } else {
+                                mypie(mytitle)
+                                mynar(mytitle)
+                            }
+
+                        });
+
+
+                        function mypie(title) {
+                            $.ajax({
+                                url: "{% url "Question_Bank:GetPieData" %}",
+                                data: {'title': title},
+                                type: "GET",
+                                contentType: "text/html; charset=utf-8",
+                                dataType: 'json',
+                                success: function (res) {
+                                    console.log("数据", res.retObj)
+                                    myChartPie.setOption({
+                                        title: {text: res.retObj[0], x: 'left', y: 'top'},
+                                        series: [{
+                                            name: '测试人数',
+                                            type: 'pie', // 设置图表类型为饼图
+                                            radius: ['40%', '70%'],
+                                            radius: '70%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                                            itemStyle: {
+                                                normal: {
+                                                    label: {
+                                                        show: true,
+                                                        position: 'inner',
+                                                        fontSize: 12,
+                                                        fontWeight: 'bold',
+                                                        align: "left",
+                                                        formatter: function (p) {   //指示线对应文字,百分比
+                                                            return p.percent + "%";
+                                                        }
+                                                    },
+                                                },
+                                            },
+                                            data: res.retObj
+                                        }]
+                                    })
+                                }
+                            });
+                        };
+
+                        ///改变选项
+                        $("#mySelect").change(function () {
+                            var mytitle = $("#mySelect").val()
+                            mypie(mytitle)
+                            mynar(mytitle)
+                        });
+
+
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChartnar = echarts.init(document.getElementById('columnar'));
+
+                        function mynar(title) {
+                            $.ajax({
+                                url: "{% url "Question_Bank:GetColData" %}",
+                                data: {'title': title},
+                                success: function (res) {
+                                    console.log("柱状图", res.retObj)
+                                    myChartnar.setOption({
+                                        color: colors,
+                                        title: {
+                                            text: res.retObj[0],
+
+                                        },
+                                        tooltip: {
+                                            trigger: 'axis',
+                                            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                            }
+                                        },
+                                        legend: {
+                                            data: ['男', '女'],
+                                            orient: 'vertical',
+                                            x: 'right',
+                                        },
+                                        xAxis: {
+                                            data: res.retObj[1]
+                                        },
+                                        yAxis: {},
+                                        series: [{
+                                            name: '男',
+                                            type: 'bar',
+                                            data: res.retObj[2]
+                                        }, {
+                                            name: '女',
+                                            type: 'bar',
+                                            data: res.retObj[3]
+                                        }]
+                                    })
+                                }
+                            })
+                        };
+                    </script>
+
+
+
+                    {% result_list cl %}
+                {% endblock %}
+                {% block pagination %}{% pagination cl %}{% endblock %}
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(".object-tools").hide().find('li a').each(function () {
+            _action.exts.push({
+                name: $(this).text(),
+                url: $(this).attr('href')
+            })
+            console.log("", $(this).text())
+        })
+        if (parent.addEvent) {
+            parent.addEvent('title', '{% get_verbose_name_plural %}')
+        }
+    </script>
+{% endblock %}

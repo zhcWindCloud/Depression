@@ -1,0 +1,54 @@
+{% load FormatFilter %}
+{% load StaticLister %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>大学生抑郁症平台</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/public.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/jq.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/func.js' %}"></script>
+    <style>
+        .myactive {
+            font-size: 26px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="pb-container">
+    <div class="pb-container-main pb-after-clear">
+
+        <div class="pb-main pb-navwrap pb-after-clear">
+            <div class="pb-iblock pb-fl pb-logo">
+                <a href="{% url 'Comprehensive:GoIndex'%}"><img src="{% static 'img/logo.jpg' %}" alt="抑郁症网站"></a>
+            </div>
+            <div class="pb-iblock pb-fl pb-nav urlclass" style="text-align: center;">
+                <h1 style="font-weight:bold;font-size:18px; text-align: center;">
+                    {% GetMeun %}
+                </h1>
+            </div>
+            <br> <br> <br> <br>
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+<script>
+    //页面跳转共用导航样式不变
+    $(document).ready(function () {
+        $(".urlclass ul li a").each(function () {
+            $this = $(this);
+            if (FormatUrl($this[0].href) == FormatUrl(String(window.location))) {
+                $this.parent().addClass('myactive');
+                $this.parent().parent().prevAll().children().removeClass('myactive');
+                $this.parent().parent().nextAll().children().removeClass('myactive');
+
+            }
+        });
+    });
+</script>
+</body>
+</html>

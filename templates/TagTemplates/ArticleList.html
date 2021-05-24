@@ -1,0 +1,33 @@
+{% load FormatFilter %}
+<div class="commside">
+
+    {% for article in Article_Catroy %}
+
+        <h4 class="pb-clr1 pb-size-big">{{ article|key }}</h4>
+        <div class="pb-line2 pb-mt5"></div>
+        <ul class="pb-mt10 previous-term pb-size-normal">
+            {% for art in article|val %}
+                <li style="margin: 10px">
+                    {% if art.NavMeun %}
+                        <a style="font-size: 16px;text-align: center"
+                           href="{% url 'Article:article_detail' art.NavMeun.slug|ForamatString  art.id art.slug %}">
+                            &nbsp; &nbsp;<span style="font-size: 16px">{{ art.title }}</span>
+                        </a>
+                    {% else %}
+                        <a style="font-size: 16px;text-align: center"
+                           href="{% url 'Article:ArticleDetail' art.id art.slug %}">
+                            &nbsp; &nbsp;<span style="font-size: 16px">{{ art.title }}</span>
+                        </a>
+                    {% endif %}
+                    <div class="pb-line2"></div>
+                </li>
+            {% empty %}
+                <li><a href="javascript:void(0);">暂无内容</a></li>
+
+            {% endfor %}
+
+        </ul>
+    {% endfor %}
+
+
+</div>

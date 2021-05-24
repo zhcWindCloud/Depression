@@ -1,0 +1,272 @@
+{% load FormatFilter %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抑郁症自测</title>
+    <link rel="stylesheet" type="text/css" href={% static  "css/semantic.css" %}/>
+    <link rel="stylesheet" type="text/css" href={% static  "layer/mobile/need/layer.css" %}/>
+    <script type="text/javascript" src="{% static 'js/lib/BroswerInfo.js' %}"></script>
+    <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+    <script src={% static  "js/jquery-2.1.1.js" %} type="text/javascript"></script>
+    <script src={% static  "js/lib/func.js" %} type="text/javascript"></script>
+    <script src={% static  "js/semantic.js" %} type="text/javascript"></script>
+    <style>
+        fieldset {
+            border: #1a75b3 1px solid
+        }
+    </style>
+</head>
+<body>
+<div class="ui container">
+    <div class="" style="margin-top: 30px">
+        <h1 style="text-align: center">{{ quert_set.themeTitle }}</h1>
+        {% if quert_set.content_render  ==  None %}
+        {% else %}
+            <fieldset><h4>{{ quert_set.content_render|safe }}</h4></fieldset>
+        {% endif %}
+    </div>
+    <div style="margin-top: 30px" class="loader" id="pro">
+        <div class="ui blue progress" data-value="0" data-total="{{ query|length }}" id="progress">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label"></div>
+        </div>
+    </div>
+    <br>
+    <form style="width: 100%;">
+        {% csrf_token %}
+        <fieldset style="color: #444;text-align: center;">
+            <div style="font-weight: 700;margin-top: 5px;margin-bottom: 5px;font-size: 18px;color: #1a75b3;">测试须知</div>
+            <div style="line-height: 26px;text-align: left;text-align:justify;font-size: 15px">
+                <b>题目数量：</b>{{ query|length }}题<br>
+                <b>测试总分：</b>{% if quert_set.is_Open %}{{ score|Forb }}{% else %}{{ score }}{% endif %}分<br>
+                <b>测试说明：</b>{{ quert_set.themeTitle_show }}
+            </div>
+            <br><br>
+            <div style="line-height: 26px;text-align: left;text-align:justify;font-size: 15px">
+                <b>请先填写以下内容:</b>
+                <div style="margin-left: 30px">
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="sex"
+                                   value="男">
+                            <br><label style="font-size: 18px"> 男</label>
+                        </div>
+                        &nbsp; &nbsp; &nbsp; &nbsp;
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="sex"
+                                   value="女">
+                            <br><label style="font-size: 18px">女</label>
+                        </div> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="gender">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">年级</div>
+                            <div class="menu">
+                                {% for grade in grade %}
+                                    <div class="item" data-value="{{ grade }}" data-text="{{ grade }}">
+                                        {{ grade }}</div>
+                                {% empty %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br> <br>
+            <input id="start" type="button" name="next" class="ui primary button next"
+                   value="开始抑郁症测试">
+        </fieldset>
+        {% for key,val in  query.items %}
+            <fieldset class="loader" style="border: none">
+                <div class="ui padded segment">
+                    <h5>{{ key }}</h5>
+                    {% for item in val %}
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="a{{ forloop.parentloop.counter }}"
+                                       value="{{ item.answer_score }}">
+                                <br><label style="font-size: 18px"> {{ item.answer }}</label>
+                            </div>
+
+                        </div>
+                    {% empty %}
+                        <h1>暂无测试内容</h1>
+                    {% endfor %}
+                </div>
+                {% if forloop.counter == 1 %}
+                    <input type="button" name="a{{ forloop.counter }}" class="ui primary button next" value="下一题">
+                {% else %}
+                    <input type="button" name="a{{ forloop.counter }}" class="ui primary button previous" value="上一题">
+                    <input type="button" name="a{{ forloop.counter }}" class="ui primary button next" value="下一题">
+                {% endif %}
+            </fieldset>
+        {% endfor %}
+        <fieldset class="loader">
+            <div style="text-align: center;padding-top: 20px">
+                <input type="button" class="ui primary button " id="sumbit" value="提交">
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script src={% static  "layer/layer.js" %} type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var d;
+
+        function modal() {
+
+
+            $('.small.modal')
+                .modal('show');
+        }
+
+        function Progress(number) {
+            $('#progress').progress({
+                value: number | '',
+                text: {
+                    active: '{value} / {total}'
+                }
+            });
+        };
+
+        $('.ui.radio.checkbox')
+            .checkbox()
+        ;
+        $('.ui.dropdown')
+            .dropdown()
+        ;
+
+        $(window).on('load', function () {
+            $('.loader').hide(0);
+        });
+
+        var current_fs, next_fs, previous_fs;
+        var left, opacity, scale;
+        var animating;
+        var num = 0;
+        //向下[name=' + radio_name + ']
+        $(".next").click(function () {
+            var drow_val = $('input[name="gender"]').val()
+            var radio_sex = $('input:radio[name = "sex"]:checked').val();
+            var radio_name = $(this).context.name;
+            var radio_val = $('input:radio[name=' + radio_name + ']:checked').val();
+            console.log(radio_val, drow_val, radio_name)
+            if ($(this).context.value == "开始抑郁症测试" && (drow_val == "" || radio_sex == null)) {
+                layer.msg("请填写前提内容")
+                return false;
+            } else if ($(this).context.value != "开始抑郁症测试" && radio_val == null) {
+                layer.msg("请选择一项")
+                return false;
+            }
+            if (animating)
+                return false;
+            animating = true;
+            $('#pro').show();
+            current_fs = $(this).parent();
+            next_fs = $(this).parent().next();
+            next_fs.show();
+            if (radio_val && $(this).context.value != "开始抑郁症测试") {
+                num++
+                Progress(num)
+            }
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    scale = 1 - (1 - now) * 0.2;
+                    left = now * 50 + '%';
+                    opacity = 1 - now;
+                    current_fs.css({
+                        //   'transform': 'scale(' + scale + ')'
+                    });
+                    next_fs.css({
+                        'left': left,
+                        'opacity': opacity
+                    })
+                },
+                duration: 0,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false
+                },
+                easing: 'easeInOutBack'
+            })
+        })
+
+        //向上
+        $('.previous').click(function () {
+            if (animating)
+                return false;
+            animating = true;
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+            previous_fs.show();
+            num--
+            Progress(num)
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    scale = 1 + (1 - now) * 0.2;
+                    left = (1 - now) * 50 + '%';
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'left': left
+                    });
+                    previous_fs.css({
+                        //  'transform': 'scale(' + scale + ')',
+                        'opacity': opacity
+                    })
+                },
+                duration: 0,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false
+                },
+                easing: 'easeInOutBack'
+            })
+        });
+        $("#sumbit").click(function () {
+            var arry = 0;
+            var grade = '';
+            $('input:radio:checked').each(function () {
+                if (this.name == "sex") {
+                    grade = this.value
+                } else {
+                    arry = arry + parseInt(this.value)
+                }
+                console.log(this.value)
+            });
+            let currsecond = DateDiff(d, new Date())
+            // 公网ip地址
+            console.log(returnCitySN["cip"])
+            var data = {"timing": currsecond, "arry": arry, 'grade': grade, "gender": $('input[name="gender"]').val(),"broswer": BrowserMatch.browser,"version": BrowserMatch.version,"OS":BrowserMatch.OS,"ip":returnCitySN["cip"]};
+            $.ajax({
+                url: window.location.href,
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (res) {
+                    window.location.href = '/Question_Bank/GetScoreResult/' + arry + '/' + getUrl() + ''
+                    console.log(res)
+                }, error: function () {
+                    layer.alert("提交接口出现错误")
+                }
+            })
+
+        })
+        $("#start").click(function () {
+            d = new Date()
+        })
+
+        function DateDiff(dtStart, dtEnd) {
+            var dd = (parseInt(dtEnd - dtStart) / 1000).toFixed(1)
+            return dd
+        }
+    });
+</script>
+</body>
+</html>

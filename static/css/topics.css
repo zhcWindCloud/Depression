@@ -1,0 +1,52 @@
+.topics-main {
+    min-height: 400px;
+}
+
+.topics-main .head h1 {
+    font-size: 24px;
+    color: #454545;
+}
+
+.topics-main .head p {
+    color: #5a5959;
+}
+
+.topics-main .tool {
+    text-align: right;
+}
+
+.topics-main .tool a {
+    background-color: #cfe3e5;
+    border-radius: 13px;
+    color: #2ca7b0;
+    padding: 0 8px;
+}
+
+.topics-main ul li {
+    border-bottom: 1px dashed #bfbfbf;
+    display: inline-block;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    width: 100%;
+}
+
+.topics-main ul li img {
+    border-radius: 5px;
+    width: 180px;
+}
+
+.topics-main ul dl {
+    float: left;
+    padding-left: 16px;
+    width: 495px;
+}
+
+.topics-main ul dl dt {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.topics-main ul dl dd {
+    font-size: 12px;
+    line-height: 22px;
+}

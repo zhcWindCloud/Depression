@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<link rel="stylesheet" href="{% static 'css/element.css' %}">
+<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div style="display:inline-block;padding-top: 30px;padding-bottom：0px;margin-left:60px">
+    <select class="el-select-dropdown el-select-dropdown__item" name="mySelect"
+            id="mySelect"></select>
+</div>
+<div id="app" style="margin: 30px">
+    <div id="pie"
+         style="display:inline-block;width: 400px;height:400px;background-color: white;padding: 30px;margin-left:30px"></div>
+    <div id="columnar"
+         style="display:inline-block; width: 400px;height:400px;background-color: white;margin-left:20px;padding: 30px"></div>
+</div>
+
+<script type="text/javascript">
+    $.get("{% url 'Question_Bank:GetAllType' %}", function (res) {
+        for (var i = 0; i < res.retObj.length; i++) {
+            var val = res.retObj[i]
+            $("#mySelect").append("<option value='" + val + "'>" + val + "</option>");
+        }
+    })
+    var colors = ['#1be39d', '#6415e2', '#00ff00', '#800000',  '#1bc7e3', '#FFA500',];
+    // 基于准备好的dom，初始化echarts实例
+    var myChartPie = echarts.init(document.getElementById('pie'));
+
+
+    var myPieoption = {
+        color: colors,
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"//模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比。
+        },
+        legend: {
+            //图例垂直排列
+            orient: 'vertical',
+            x: 'right',
+            //data中的名字要与series-data中的列名对应，方可点击操控
+            //data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+        },
+    };
+    myChartPie.setOption(myPieoption)
+
+
+    function mypie(title) {
+        $.ajax({
+            url: "{% url "Question_Bank:GetPieData" %}",
+            data: {'title': title},
+            type: "GET",
+            contentType: "text/html; charset=utf-8",
+            dataType: 'json',
+            success: function (res) {
+                console.log("数据", res.retObj)
+                myChartPie.setOption({
+                    title: {text: res.retObj[0], x: 'left', y: 'top'},
+                    series: [{
+                        name: '测试人数',
+                        type: 'pie', // 设置图表类型为饼图
+                        radius: ['40%', '70%'],
+                        radius: '70%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    position: 'inner',
+                                    fontSize: 12,
+                                    fontWeight: 'bold',
+                                    align: "left",
+                                    formatter: function (p) {   //指示线对应文字,百分比
+                                        return p.percent + "%";
+                                    }
+                                },
+                            },
+                        },
+                        data: res.retObj
+                    }]
+                })
+            }
+        });
+    };
+
+    ///改变选项
+    $("#mySelect").change(function () {
+        var mytitle = $("#mySelect").val()
+        mypie(mytitle)
+        mynar(mytitle)
+    });
+
+    $(document).ready(function () {
+        var mytitle = $("#mySelect").val()
+        console.log("mytitle：",mytitle)
+        if (mytitle == null) {
+            mypie('贝克抑郁自评量表(BDI)')
+            mynar('贝克抑郁自评量表(BDI)')
+        } else {
+            mypie(mytitle)
+            mynar(mytitle)
+        }
+    });
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChartnar = echarts.init(document.getElementById('columnar'));
+
+    function mynar(title) {
+        $.ajax({
+            url: "{% url "Question_Bank:GetColData" %}",
+            data: {'title': title},
+            success: function (res) {
+                console.log("柱状图", res.retObj)
+                myChartnar.setOption({
+                    color: colors,
+                    title: {
+                        text: res.retObj[0],
+
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: ['男', '女'],
+                        orient: 'vertical',
+                        x: 'right',
+                    },
+                    xAxis: {
+                        data: res.retObj[1]
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '男',
+                        type: 'bar',
+                        data: res.retObj[2]
+                    }, {
+                        name: '女',
+                        type: 'bar',
+                        data: res.retObj[3]
+                    }]
+                })
+            }
+        })
+    };
+</script>
+
+</body>
+</html>

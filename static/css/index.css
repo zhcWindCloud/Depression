@@ -1,0 +1,401 @@
+/*首页样式*/
+.idx-t1 {
+    font-size: 25px;
+}
+
+.idx-t2 {
+    font-size: 18px;
+}
+
+.idx-line1 {
+    height: 1px;
+    background-color: #d2d2d2;
+    line-height: 1px;
+    clear: both;
+    display: block;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.idx-ycwz-1 {
+    width: 100%;
+}
+
+.idx-ycwz-1 .d1 {
+    padding-left: 25px;
+    width: 362px;
+}
+
+.idx-ycwz-1 h6 a span {
+    font-size: 14px;
+    color: #646464;
+}
+
+.idx-ycwz-1 .d1 ul a.rt {
+    width: 272px;
+    margin-left: 18px;
+    font-size: 14px;
+    position: relative;
+    top: -4px;
+}
+
+.idx-ycwz-1 .d1 ul p {
+    width: 272px;
+    padding-left: 18px;
+    font-size: 12px;
+}
+
+.idx-ycwz-1 .idx-last-board {
+    background: url('../images/idx-last-board.jpg');
+    width: 273px;
+    height: 211px;
+    padding: 36px 0 0 42px;
+}
+
+.idx-ycwz-1 .idx-last-board img {
+    height: 110px;
+}
+
+.idx-ycwz-1 .rank span.no {
+    background: url("../images/idx-radis-bg.jpg") repeat scroll 0 0 transparent;
+    display: block;
+    line-height: 22px;
+    text-align: center;
+    width: 22px;
+}
+
+.idx-ycwz-1 .rank li {
+    width: 360px;
+}
+
+.idx-ycwz-1 .rank dl {
+    margin-left: 10px;
+}
+
+.idx-ycwz-1 .rank dl dt img {
+    width: 40px;
+    height: 40px;
+}
+
+.idx-ycwz-1 .rank dl dd {
+    font-size: 10px;
+    text-align: center;
+}
+
+.idx-ycwz-1 .rank a.title {
+    width: 170px;
+    margin-left: 10px;
+}
+
+.idx-ycwz-1 .rank span.dollar {
+    background-color: #f3f3f3;
+    display: block;
+    line-height: 45px;
+    text-align: center;
+    width: 50px;
+}
+
+.idx-ycwz-1 ul.previous-term span {
+    font-size: 36px;
+    line-height: 6px;
+    position: relative;
+    top: -2px;
+}
+
+.idx-ycwz-1 ul li a img {
+    height: 55px
+}
+
+.idx-ycwz-1 .d2 {
+    width: 295px;
+}
+
+.idx-ycwz-2 ul li {
+    display: inline-block;
+    height: 170px;
+    width: 130px;
+    position: relative;
+    padding: 15px 15px 0 15px;
+    margin-right: 18px;
+    float: left;
+}
+
+.idx-ycwz-2 ul li.no1 .rank {
+    background-position: -462px -160px;
+}
+
+.idx-ycwz-2 ul li.no2 .rank {
+    background-position: -504px -160px;
+}
+
+.idx-ycwz-2 ul li.no3 .rank {
+    background-position: -552px -160px;
+}
+
+.idx-ycwz-2 ul li.no4 .rank {
+    background-position: -595px -160px;
+}
+
+.idx-ycwz-2 ul li.no5 .rank {
+    background-position: -639px -160px;
+}
+
+.idx-ycwz-2 ul li.no6 .rank {
+    background-position: -682px -160px;
+}
+
+.idx-ycwz-2 ul li.no6 {
+    margin-right: 0;
+}
+
+.idx-ycwz-2 ul li dl {
+    text-align: center;
+}
+
+.idx-ycwz-2 ul li dl dt {
+    background-color: #e6eeef;
+    padding: 12px 10px 0;
+    width: 111px;
+    height: 100px;
+    position: relative;
+}
+
+.idx-ycwz-2 ul li img {
+    width: 100px;
+    height: 100px;
+}
+
+.idx-ycwz-2 ul li .rank {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    top: 0;
+    left: 0;
+}
+
+.idx-ycwz-2 ul li .nick {
+    font-size: 13px;
+    padding-top: 10px;
+    color: #646464;
+}
+
+.idx-ycwz-2 ul li .point {
+    font-size: 12px;
+    width: 60px;
+    color: #fff;
+    background: #0b5861;
+    margin: 5px auto 0 auto;
+}
+
+.idx-ycwz-2 ul li .head {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.idx-ycwz-2 ul li .signature {
+    background-color: #0b5861;
+    color: #ffffff;
+    display: block;
+    font-size: 12px;
+    height: 80px;
+    line-height: 1.7em;
+    margin: 0 auto;
+    padding: 20px 20px 0;
+    width: 60px;
+    position: absolute;
+    top: 12px;
+    left: 15px;
+}
+
+.idx-mryx .d1 {
+    width: 330px;
+}
+
+.idx-mryx .d1 .tle {
+    width: 185px;
+    _width: 180px;
+    border-top: 1px solid #bfbfbf;
+    border-right: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
+    text-align: right;
+    line-height: 94px;
+    line-height: 95px \9;
+    *line-height: 96px;
+    font-size: 18px;
+}
+
+.idx-mryx .d1 .tle span {
+    font-size: 14px;
+    margin-right: 18px;
+}
+
+.idx-mryx .d1 ul {
+    width: 330px;
+    border-right: 1px dashed #d2d2d2;
+}
+
+.idx-mryx .d1 ul span {
+    font-size: 38px;
+    line-height: 6px;
+    position: relative;
+    top: -3px;
+    margin: 0 5px 0 2px;
+}
+
+.idx-mryx .d1 ul li a {
+    line-height: 32px;
+}
+
+.idx-mryx .d1-2 {
+    margin-left: 45px;
+}
+
+.idx-mryx .d2 {
+    width: 298px;
+}
+
+.idx-mryx .d2 table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.idx-mryx .d2 table tr td {
+    line-height: 47px;
+    border: 1px solid #bfbfbf;
+}
+
+.idx-jxed .d1 {
+    width: 690px;
+}
+
+.idx-jxed .d1 ul li {
+    display: inline-block;
+}
+
+.idx-jxed .d1 ul li.mt {
+    margin-top: 40px;
+}
+
+.idx-jxed .d1 ul dl {
+    width: 514px;
+    padding-left: 28px;
+}
+
+.idx-jxed .d1 ul dl dt {
+    font-size: 21px;
+}
+
+.idx-jxed .d1 ul dl dd.author {
+    line-height: 32px;
+}
+
+.idx-jxed .d1 ul dl dd.cnt {
+    line-height: 1.5em;
+}
+
+.idx-jxed .d1 ul dl dd.ap {
+    padding-top: 12px;
+}
+
+.idx-jxed .d2 {
+    width: 297px;
+    height: 333px;
+    background: url("../images/b_xxzk_bg.jpg");
+}
+
+.idx-jxed .d2 dl {
+    width: 250px;
+    margin: 0 auto;
+    padding-top: 60px;
+    text-align: center;
+}
+
+.idx-jxed .d2 dl .term {
+    color: #07080b;
+    line-height: 40px;
+}
+
+.idx-jxed .d2 dl .tle {
+    width: 160px;
+    margin: 0 auto;
+}
+
+.idx-jxed .d2 dl dt img {
+    width: 250px;
+    height: 160px;
+}
+
+.inx-qtsj-line {
+    width: 430px;
+    height: 1px;
+    line-height: 1px;
+    background-color: #d2d2d2;
+    margin-top: 28px;
+    overflow: hidden;
+}
+
+.idx-qtsj-t a {
+    display: inline-block;
+    text-align: center;
+    margin-left: 21px;
+}
+
+.idx-qtsj-t a .chn {
+    color: #0b5861;
+    font-size: 30px;
+}
+
+.idx-qtsj-t a .eng {
+    font-size: 14px;
+    color: #b5b5b5;
+}
+
+.idx-qtsj ul li {
+    width: 200px;
+    height: 190px;
+    float: left;
+    position: relative;
+    margin: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.idx-qtsj table {
+    height: 40px;
+    line-height: 40px;
+    position: absolute;
+    bottom: 0;
+    background-color: #fff;
+    border: none;
+    border-collapse: collapse;
+}
+
+.idx-qtsj table .tle {
+    background: url("../images/love.png") no-repeat scroll 4px 14px transparent;
+    padding-left: 26px;
+    width: 134px;
+    color: #0b5860;
+}
+
+.idx-qtsj table .num {
+    width: 40px;
+    background-color: #97d2d7;
+    text-align: center;
+    color: #fff;
+}
+
+.idx-wqzt li {
+    display: inline-block;
+    margin-right: 26px;
+    text-align: center;
+}
+
+.idx-wqzt li img {
+    width: 185px;
+}
+
+
+
+
+

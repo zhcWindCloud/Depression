@@ -1,0 +1,207 @@
+{% extends 'Comm/header.html' %}
+{% load FormatFilter %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/topics.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/layui.css' %}"/>
+
+    <div class="pb-container">
+        <div class="pb-container-main pb-after-clear">
+            <hr>
+            <!-- 面包屑 -->
+            <div class="ui breadcrumb" style="margin-top: 20px">
+                <a class="section">主页</a>
+                <i class="right angle icon divider"></i>
+                <a class="section ">{{ Muen }}</a>
+                <i class="right angle icon divider"></i>
+                {% if Article %}
+                    <div class="section active">文章列表</div>
+                {% elif Questions %}
+                    <div class="section active">问卷列表</div>
+                {% else %}
+                    <div class="section active"></div>
+                {% endif %}
+
+            </div>
+            <!-- 面包屑结束 -->
+            <!-- 当前页面内容 -->
+
+            <div class="pb-main pb-mt20">
+                <!--专题章展示-->
+                <div class="topics-main pb-inner-main pb-mt10">
+                    <div id="articleList">
+                        <ul class="pb-mt30">
+                            {% if Article %}
+                                {% for article in Article|GetArticleCount %}
+                                    <li>
+                                        <a href="{% url 'Article:article_detail' article.NavMeun.slug|ForamatString  article.id article.slug %}">
+                                            <img style="height: 160px"
+                                                 src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}"
+                                                 class="pb-fl"
+                                                 alt="{{ article.title }}"/>
+                                        </a>
+                                        <dl>
+                                            <dt>
+                                                <a href="{% url 'Article:article_detail' article.NavMeun.slug|ForamatString  article.id article.slug %}">
+                                                    <h3 style="color: #0e8c8c;font-family: 新宋体;font-weight: bold;font-size: 20px">{{ article.title }}</h3>
+                                                </a>
+                                            </dt>
+
+                                            <dd class="pb-mt10">
+                                                <strong style="font-size: 16px">日期</strong> ：
+                                                <span style="font-size: 16px">{{ article.create_time|FormatDate }}</span>
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                <strong style="font-size: 16px">阅读次数</strong> ：
+                                                <span style="font-size: 16px">{{ article.reading }}</span>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <p style="font-size: 16px;font-family: '微软雅黑'">
+                                                    &nbsp; &nbsp; &nbsp; <span>{{ article.content_raw|splip }} </span>
+                                                </p>
+                                            </dd>
+                                        </dl>
+
+                                    </li>
+                                {% empty %}
+                                    <h2>暂无内容</h2>
+                                {% endfor %}
+                            {% elif Questions %}
+                                {% for article in Questions|GetArticleCount %}
+                                    <li>
+                                        <a target="_blank"
+                                           href="{% url 'Question_Bank:TestPaper' article.id article.slug %}">
+                                            <img style="height: 160px"
+                                                 src="{% static 'img/banner_10001_300a22a90b.jpg' %}" class="pb-fl"
+                                                 alt=""/>
+                                        </a>
+                                        <dl>
+                                            <dt>
+                                                <h3>
+                                                    <a style="color: #0e8c8c;font-family: 新宋体;font-weight: bold;font-size: 20px"
+                                                       target="_blank"
+                                                       href="{% url 'Question_Bank:TestPaper' article.id article.slug %}">
+                                                        {{ article.themeTitle }}
+                                                    </a>
+                                                </h3>
+
+                                            </dt>
+
+                                            <dd class="pb-mt10">
+
+                                                <a target="_blank"
+                                                   href="{% url 'Question_Bank:GetPrintData' article.id article.slug %}"><i
+                                                        class="print icon"></i>打印</a>
+                                                &nbsp; &nbsp;
+                                                <strong style="font-size: 16px">日期</strong> ：
+                                                <span style="font-size: 16px">{{ article.create_time|FormatDate }}</span>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <p style="font-size: 16px;font-family: '微软雅黑'">
+                                                    &nbsp; &nbsp; &nbsp; <span>{{ article.content|splip }} </span>
+                                                </p>
+                                            </dd>
+                                        </dl>
+
+                                    </li>
+                                {% empty %}
+                                    <h2>暂无内容</h2>
+                                {% endfor %}
+
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- 分页 -->
+
+
+                    <div id="articelpage"></div>
+
+
+                    <script src="{% static 'js/layui.js' %}" type="text/javascript" charset="utf-8"></script>
+                    <script>
+                        $(document).ready(function () { //开启HASH
+                            layui.use(['laypage'], function () {
+                                var laypage = layui.laypage
+                                var options = {
+                                    elem: 'articelpage',
+                                    {% if Article %}
+                                        count: {{  Article|length }},        //总数量
+                                    {% else %}
+                                        count: {{  Questions|length }},        //总数量
+                                    {% endif %}
+                                    limit: 5,
+                                    hash: "article",
+                                    jump: function (obj, first) {
+                                        //首次不执行
+                                        if (!first) {
+                                            const slug = FormatUrl(window.location.href)
+                                            let curr = ArticelFormatUrl(window.location.href)
+                                            console.log(slug, obj.curr)
+                                            if (obj.curr) {
+                                                curr = parseInt(obj.curr)
+                                                GetAjAx(obj.curr, obj.limit, slug)
+                                            }
+                                            //do something
+                                        }
+                                    }
+                                }
+                                laypage.render(options);
+                            });
+                        });
+
+                        function GetAjAx(curr, limit, slug) {
+                            $.ajax({
+                                url: '{% url 'Comprehensive:GetNavName' slug %}',
+                                tyep: 'get',
+                                datatype: 'jason',
+                                data: {"curr": curr, "limit": limit},
+                                success: function (ret) {
+                                    //重新渲染文章展示数量
+                                    document.getElementById("articleList").innerHTML = ret
+                                },
+                                error: function (ret) {
+                                    alert("分页接口出现异常")
+                                }
+                            })
+                        }
+                    </script>
+                </div>
+                <!-- 右边侧栏 -->
+                <div class="commside">
+                    {% for article in Article_Catroy %}
+                        <div class="pb-main-side pb-iblock pb-after-clear pb-fr pb-mt40">
+                            <h4 class="pb-clr1 pb-size-big">{{ article|key }}</h4>
+                            <div class="pb-line2 pb-mt5"></div>
+                            <ul class="pb-mt10 previous-term pb-size-normal">
+                                {% for art in article|val %}
+                                    <li>
+                                    {% if art.NavMeun %}
+                                        <a style="font-size: 16px;text-align: center"
+                                           href="{% url 'Article:article_detail' art.NavMeun.slug|ForamatString  art.id art.slug %}">
+                                            &nbsp; &nbsp;<span style="font-size: 16px">{{ art.title }}</span>
+                                        </a>
+                                        {% else %}
+                                         <a style="font-size: 16px;text-align: center"
+                                           href="{% url 'Article:ArticleDetail' art.id art.slug %}">
+                                            &nbsp; &nbsp;<span style="font-size: 16px">{{ art.title }}</span>
+                                        </a>
+                                        {% endif %}
+                                        <div class="pb-line2"></div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+    <script>console.log(localStorage.getItem("usertime"))
+
+    </script>
+
+
+{% endblock %}

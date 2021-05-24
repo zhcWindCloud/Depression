@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>大学生抑郁症平台</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/public.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.css' %}"/>
+</head>
+<body>
+<div class="ui container">
+    <div style="margin-top: 30px">
+        {% if Test_query %}
+            <h4>{{ Test_query.themeTitle }}&nbsp;&nbsp;&nbsp;测试结果</h4>
+            <br>
+            <div class="ui three column grid" style="margin-left: 30px">
+                <div class="column">
+                    <div class="ui blue card">
+                        <div class="content">
+                            <div class="header">测试结果</div>
+                            <br>
+                            <div class="meta">
+                                <span class="right floated time">耗时：{{ Test_query.Timing }}秒</span>
+                                <span class="category">得分：<span
+                                        style="font-size: 26px;color: red">{{ Test_query.answer_score }}</span></span>
+                            </div>
+                            <br>
+                            <div class="description">
+                                <p style="font-size: 20px"><span style="color: #0e8c8c"> {{ query|first }}</span></p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <p>此问卷结果仅供参考&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui blue card">
+                        <div class="content">
+                            <div class="header">缓解方法</div>
+                            <br>
+                            <div class="description">
+                                <p>尽量保持适度的运动</p>
+                                <p>读一本修养身心的书</p>
+                                <p>放松心情</p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <p>此建议方法推荐仅供参考&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui blue card">
+                        <div class="content">
+                            <div class="header">相关问卷</div>
+                            <br>
+                            <div class="meta">
+                                {% if question_query|length < 3 %}
+                                    {% for title in question_query %}
+                                        <p>
+                                            <a style="color: rgba(0, 0, 0, 0.4);"
+                                               href="{% url 'Question_Bank:TestPaper' title.id title.slug %}">{{ title.themeTitle }}</a>
+                                        </p>
+                                    {% endfor %}
+                                    <p style="color: white">暂无</p>
+                                {% else %}
+                                    {% for title in question_query %}
+                                        <p>
+                                            <a style="color: rgba(0, 0, 0, 0.4);"
+                                               href="{% url 'Question_Bank:TestPaper' title.id title.slug %}">{{ title.themeTitle }}</a>
+                                        </p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <p>相关测试仅供参考&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h1>暂无结果</h1>
+        {% endif %}
+
+        <h4>{{ Test_query.themeTitle }}&nbsp;&nbsp;&nbsp;评分等级</h4>
+        <table class="ui blue large table" style="text-align: center;">
+            <thead>
+            <tr>
+                <th><span style="font-size: 18px;color: #1e70bf">分数</span></th>
+                <th><span style="font-size: 18px;color: #1e70bf">等级评定</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for qs in query|last %}
+                <tr class="yellow">
+                    <td><h4>&nbsp;&nbsp;&nbsp;{{ qs.min_score }}—{{ qs.max_score }}分</h4></td>
+                    <td><h4>{{ qs.grade }}</h4></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!--@Time    : 2021/5/10 16:06-->
+<!--@Author  : ZHC-->
+<!--@FileName: VisitorLine.html-->
+<!--@Software: PyCharm-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <script src="{% static 'js/lib/func.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/echarts.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/jquery-2.1.1.js' %}" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+<div style="margin-top: 60px;margin-left: 60px">
+    <div id="main" style="width:1000px;height:360px;"></div>
+</div>
+<script type="text/javascript">
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var colors = ['#1bc7e3', '#91CC75', '#1bc7e3'];
+
+    option = {
+        title: {
+            text: '来访记录',
+        },
+        color: colors, tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {},
+        xAxis: {
+            type: 'category',
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        }, dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                handleSize: 5,//滑动条的 左右2个滑动条的大小
+                height: 2,//组件高度
+                bottom: 30,//右边的距离
+                handleColor: '#228da5',//h滑动图标的颜色
+                handleStyle: {
+                    borderColor: "#cacaca",
+                    borderWidth: "1",
+                    shadowBlur: 2,
+                    background: "#ddd",
+                    shadowColor: "#ddd",
+                },
+                fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                    //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                    //给第一个设置0，第四个设置1，就是垂直渐变
+                    offset: 0,
+                    color: '#1eb5e5'
+                }, {
+                    offset: 1,
+                    color: '#5ccbb1'
+                }]),
+                backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                showDataShadow: false,//是否显示数据阴影 默认auto
+                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                filterMode: 'filter',
+            },
+            //下面这个属性是里面拖到
+            {
+                type: 'inside',
+                show: true,
+                xAxisIndex: [0],
+                start: 1,
+                end: 60
+            }
+        ],
+        series: []
+    };
+
+
+    $.ajax({
+        url: "{% url 'Comprehensive:chart_data' %}",
+        type: "post",
+        data: {},
+        contentType: "text/html; charset=utf-8",
+        dataType: 'json',
+        success: function (res) {
+            console.log(res.retObj)
+            option.xAxis.data = res.retObj[0]
+            option.series = FormatVisitor(res.retObj)
+            myChart.setOption(option)
+        }, error: function () {
+            console.log("异常")
+        }
+    })
+
+
+</script>
+</body>
+</html>

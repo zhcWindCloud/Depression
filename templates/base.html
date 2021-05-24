@@ -1,0 +1,262 @@
+{% extends 'Comm/header.html' %}
+{% load FormatFilter %}
+{% load StaticLister %}
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+
+    <script src="{% static 'js/semantic.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/ap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.slideBox.js' %}"></script>
+    <!-- 轮播图 -->
+    <div class="pb-main pb-mt10">
+        <div id="bSlideBox" class="pb-main slideBox">
+            <ul class="items" style="width: 2100px; left: -1050px;">
+                {% GetSlideImg %}
+            </ul>
+        </div>
+    </div>
+    <br><br>
+    <script>
+        $(document).ready(function () {
+            $('#bSlideBox').slideBox({
+                duration: 0.7,
+                //direction : 'top',
+                easing: 'linear',
+                delay: 5,
+                hideClickBar: true,
+                clickBarRadius: 10
+            });
+        });
+    </script>
+
+
+    <div style="clear:both;"></div>
+    <div class="pb-main pb-mt20">
+        <h3 class="idx-t1"><a href="javascript:void(0)" class="pb-clr1">{{ Article.0|key }}</a></h3>
+        <div class="idx-line1"></div>
+
+        <div class="ui grid">
+            <div class="four wide stretched column">
+                <div class="ui vertical fluid tabular menu">
+                    {% for article in  Article.0|val %}
+                        {% if forloop.counter == 1 %}
+                            <a class="item stretched active" data-tab="bio{{ forloop.counter|ParsStr }}">
+                                <h4>{{ article.title }}</h4>
+                            </a>
+                        {% else %}
+                            <a class="item stretched" data-tab="bio{{ forloop.counter|ParsStr }}">
+                                <h4>{{ article.title }}</h4>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class=" twelve wide stretched column" style="height: 200px;">
+                {% for article in  Article.0|val %}
+                    {% if forloop.counter == 1 %}
+
+                        <div class="ui segment bottom stretched tab active"
+                             data-tab="bio{{ forloop.counter|ParsStr }}"
+                             style="margin-top: 15px;">
+                            {{ article.content_render|splip1|safe }}
+                            <p>
+                                {% if article.NavMeun %}
+                                    <a target="_blank"
+                                       href=" {% url 'Article:article_detail' article.NavMeun.slug|ForamatString article.id article.slug %}">阅读全文</a>
+                                {% else %}
+                                    <a target="_blank"
+                                       href="{% url 'Article:ArticleDetail' article.id article.slug %}">阅读全文</a>
+                                {% endif %}
+
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="ui segment bottom stretched tab" data-tab="bio{{ forloop.counter|ParsStr }}"
+                             style="margin-top: 15px;">
+                            {{ article.content_render|splip1|safe }}
+                            <p>
+                                {% if article.NavMeun %}
+                                    <a target="_blank"
+                                       href=" {% url 'Article:article_detail' article.NavMeun.slug|ForamatString article.id article.slug %}">阅读全文</a>
+                                {% else %}
+                                    <a target="_blank"
+                                       href="{% url 'Article:ArticleDetail' article.id article.slug %}">阅读全文</a>
+
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(".tabular.menu .item").tab();
+    </script>
+
+    <br>
+    <div class="pb-main pb-mt20">
+
+        <h3 class="idx-qtsj-t pb-mt50">
+            <div class="inx-qtsj-line pb-fr"></div>
+            <div class="inx-qtsj-line pb-fl"></div>
+            <a href="javascript:void(0)"><span class="chn">{{ Article.1|key }}</span> </a>
+        </h3>
+        <br>
+        <div class="idx-qtsj pb-mt20 pb-after-clear">
+            <ul> {% for article in  Article.1|val %}
+                <li>{% if article.NavMeun %}
+                    <a target="_blank"
+                       href="  {% url 'Article:article_detail' article.NavMeun.slug|ForamatString article.id article.slug %}">
+                        <img src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}"
+                             class="pb-block" style="width:200px;"
+                             alt="{{ article.title }}"/>
+                    </a>{% else %}<a target="_blank"
+                                     href="{% url 'Article:ArticleDetail' article.id article.slug %}">
+                        <img src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}"
+                             class="pb-block" style="width:200px;"
+                             alt="{{ article.title }}"/>
+                    </a>
+                {% endif %}
+
+
+                    <table class="pb-opac70">
+                        <tbody>
+                        <tr>
+                            <td class="tle"> {{ article.title }}</td>
+                            <td class="num"> {{ article.reading }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+
+        <div style="clear:both;"></div>
+        <h3 class="idx-t1 pb-mt50"><a href="http://www.al520.com/yiyubiji/" class="pb-clr1">{{ Article.2|key }}</a>
+        </h3>
+        <div class="idx-line1"></div>
+        <br>
+        <div class="idx-mryx pb-mt20 pb-after-clear" style="margin-left: 60px;">
+            {% for article in  Article.2|val|Tem_lenth %}
+                <div class="d1 pb-fl">
+                    <div class="ui link cards">
+                        <div class="card">
+                            <div class="image">
+                                <img src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}"
+                                     style="height: 200px">
+                            </div>
+                            <div class="content" style="height: 182px">
+                                <div class="header">
+                                    {% if article.NavMeun %}
+                                        <a target="_blank"
+                                           href="{% url 'Article:article_detail' article.NavMeun.slug|ForamatString article.id article.slug %}">
+                                            {{ article.title|FormatString }}
+                                        </a>
+                                    {% else %}
+                                        <a target="_blank"
+                                           href="{% url 'Article:ArticleDetail' article.id article.slug %}">
+                                            {{ article.title|FormatString }}
+                                        </a>
+                                    {% endif %}
+
+
+                                </div>
+                                <br>
+                                <div class="meta">
+                                    <a>{{ article.author }}</a>
+                                </div>
+                                <br>
+                                <div class="description">
+                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{{ article.content_raw|spli }}
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <span class="right floated"><i
+                                        class="stopwatch icon"></i>{{ article.create_time|FormatDate }}</span>
+                                <span><i class="eye icon"></i>{{ article.reading }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div style="clear:both;"></div>
+
+
+        <h3 class="idx-qtsj-t pb-mt50">
+            <div class="inx-qtsj-line pb-fr"></div>
+            <div class="inx-qtsj-line pb-fl"></div>
+            <a href="javascript:void(0)">
+                <span class="chn">{{ Article.3|key }}</span>
+            </a>
+        </h3>
+
+        <div class="idx-jxed pb-mt20 pb-after-clear">
+            <div class="pb-fl d1">
+                <ul>
+                    {% for article in  Article.3|val %}
+                        <li><img class="pb-fl"
+                                 src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}"
+                                 alt="{{ article.title }}"/>
+                            <dl class="pb-fl">
+                                <dt>
+                                    {% if article.NavMeun %}
+                                        <a target="_blank"
+                                           href="{% url 'Article:article_detail' article. NavMeun.sulg|ForamatString article.id article.sulg %}">{{ article.title }}</a>
+                                    {% else %}
+                                        <a target="_blank"
+                                          href="{% url 'Article:ArticleDetail' article.id article.slug %}">{{ article.title }}</a>
+
+                                    {% endif %}
+
+                                </dt>
+                                <br>
+                                <dd class="cnt">
+                                    &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;{{ article.content_raw|splip }}
+                                </dd>
+                            </dl>
+                        </li>
+                        {% empty %}
+                        <h1>暂无内容</h1>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            AudioPlayer.setup("js/player.swf", {
+                width: 300,
+                initialvolume: 100
+            });
+            $(".auplayer").each(function () {
+                AudioPlayer.embed($(this).attr('id'), {
+                    soundFile: $(this).attr('f'),
+                    titles: $(this).attr('t'),
+                    artists: $(this).attr('a'),
+                    autostart: "no",
+                    loop: "no"
+                });
+            });
+            $(".idx-qtsj li").hover(function () {
+                $(this).find('table').stop().animate({
+                    'bottom': '-40px'
+                }, 500);
+            }, function () {
+                $(this).find('table').stop().animate({
+                    'bottom': '0px'
+                }, 500);
+            });
+            localStorage.setItem("usertime", "dadw")
+        });
+    </script>
+{% endblock %}

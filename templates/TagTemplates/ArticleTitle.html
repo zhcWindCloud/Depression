@@ -1,0 +1,67 @@
+{% load FormatFilter %}
+<ul class="pb-mt30">
+    {% if Article %}
+        {% for article in Article|GetArticleCount %}
+            <li>
+                <a href="{% url 'Article:article_detail' article.NavMeun.slug|ForamatString  article.id article.slug %}">
+                    <img style="height: 160px" src="{% if article.image %} {{ article.image.url }} {% else %} {% static 'img/depression.jpg' %}{% endif %}" class="pb-fl"
+                         alt="{{ article.title }}"/>
+                </a>
+                <dl>
+                    <dt>
+                        <a href="{% url 'Article:article_detail' article.NavMeun.slug|ForamatString  article.id article.slug %}">
+                            <h3 style="color: #0e8c8c;font-family: 新宋体;font-weight: bold;font-size: 20px">{{ article.title }}</h3></a>
+                    </dt>
+
+                    <dd class="pb-mt10">
+                        <strong style="font-size: 16px">日期</strong> ：
+                        <span style="font-size: 16px">{{ article.create_time|FormatDate }}</span>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <strong style="font-size: 16px">阅读次数</strong> ：
+                        <span style="font-size: 16px">{{ article.reading }}</span>
+                    </dd>
+                    <br>
+                    <dd>
+                        <p style="font-size: 16px"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            <span>{{ article.content_raw|splip }} </span>
+                        </p>
+                    </dd>
+                </dl>
+
+            </li>
+        {% empty %}
+            <h2>暂无内容</h2>
+        {% endfor %}
+    {% else %}
+        {% for article in Questions|GetArticleCount %}
+            <li>
+                <a href="">
+                    <img style="height: 160px"
+                         src="{% static 'img/depression.jpg' %}" class="pb-fl"
+                         alt=""/>
+                </a>
+                <dl>
+                    <dt>
+                        <a href="">
+                            <h3 style="color: #0e8c8c;font-family: 新宋体;font-weight: bold;font-size: 20px">{{ article.themeTitle }}</h3></a>
+                    </dt>
+
+                    <dd class="pb-mt10">
+                        <strong style="font-size: 16px">日期</strong> ：
+                        <span style="font-size: 16px">{{ article.create_time|FormatDate }}</span>
+                    </dd>
+                    <br>
+                    <dd>
+                        <p style="font-size: 16px"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            <span>{{ article.content|splip }}</span>
+                        </p>
+                    </dd>
+                </dl>
+
+            </li>
+        {% empty %}
+            <h2>暂无内容</h2>
+        {% endfor %}
+
+    {% endif %}
+</ul>
