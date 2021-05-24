@@ -4,6 +4,10 @@
 
 一、安装工具
 
+总：
+或者运行
+pip install -r requirements.txt
+
 1、python3.9 
 
 链接：https://www.python.org/downloads/
